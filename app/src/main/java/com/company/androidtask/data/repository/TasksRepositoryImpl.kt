@@ -1,12 +1,11 @@
 package com.company.androidtask.data.repository
 
 import com.company.androidtask.data.db.TasksDao
-import com.company.androidtask.data.remote.HeaderKey
 import com.company.androidtask.data.manager.CacheManager
 import com.company.androidtask.data.remote.ApiService
+import com.company.androidtask.data.remote.HeaderKey
 import com.company.androidtask.data.remote.model.TasksModel
 import com.company.androidtask.domain.TasksRepository
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import javax.inject.Inject

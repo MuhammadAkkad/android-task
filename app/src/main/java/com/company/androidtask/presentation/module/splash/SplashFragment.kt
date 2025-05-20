@@ -1,8 +1,7 @@
-package com.company.androidtask.presentation.modules.splash
+package com.company.androidtask.presentation.module.splash
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.company.androidtask.R
@@ -13,9 +12,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SplashFragment : BaseFragment<FragmentSplashBinding>() {
+class SplashFragment : BaseFragment<FragmentSplashBinding, SplashViewModel>() {
 
-    private val viewModel: SplashViewModel by viewModels()
+    override val viewModel: SplashViewModel by viewModels()
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -26,11 +25,16 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
     override fun initListeners() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isAuthorized.collectLatest { isAuthorized ->
-                if (isAuthorized)
-                    navigate(R.id.action_SplashFragment_to_TasksFragment)
-                else {
-                    Toast.makeText(requireContext(),"Unable to make connection, please try again later.",Toast.LENGTH_SHORT).show()
+            viewModel.isAuthorized.collectLatest {
+                it?.let { isAuthorized ->
+                    if (isAuthorized)
+                        navigate(R.id.action_SplashFragment_to_TasksFragment)
+                    else
+                        dialogManager.showErrorDialog(
+                            titleResId = R.string.dialog_error_title_default,
+                            descriptionResId = R.string.dialog_error_description_default,
+                            buttonTextResId = R.string.dialog_button_cancel,
+                        )
                 }
             }
         }
