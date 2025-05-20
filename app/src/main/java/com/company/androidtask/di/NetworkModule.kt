@@ -1,7 +1,6 @@
 package com.company.androidtask.di
 
 import com.company.androidtask.data.common.Constants.BASE_URL
-import com.company.androidtask.data.manager.CacheManager
 import com.company.androidtask.data.remote.ApiService
 import dagger.Module
 import dagger.Provides
