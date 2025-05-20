@@ -50,14 +50,6 @@ class CacheManager @Inject constructor(
         }
     }
 
-    fun remove(key: String) {
-        if (hasKey(key)) {
-            prefs.edit { remove(key) }
-            Log.i("CACHE MANAGER ", "data removed with key:$key")
-
-        }
-    }
-
     fun hasKey(key: String): Boolean = prefs.contains(key)
 
 }

@@ -1,12 +1,10 @@
 package com.company.androidtask.data.repository
 
-import com.company.androidtask.data.manager.CacheKey
+import com.company.androidtask.data.remote.HeaderKey
 import com.company.androidtask.data.manager.CacheManager
 import com.company.androidtask.data.remote.ApiService
 import com.company.androidtask.data.remote.model.LoginRequestModel
-import com.company.androidtask.data.remote.model.LoginResponseModel
 import com.company.androidtask.domain.LoginRepository
-import retrofit2.Response
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
@@ -14,11 +12,16 @@ class LoginRepositoryImpl @Inject constructor(
     private val cacheManager: CacheManager
 ) : LoginRepository {
 
-    override suspend fun login(credentials: LoginRequestModel): Response<LoginResponseModel> {
-        val response = apiService.login(credentials)
+    override suspend fun login(credentials: LoginRequestModel): Boolean {
+        val header =
+            cacheManager.get<String>(HeaderKey.BASIC_AUTHENTICATION) ?: return false
+        val response = apiService.login("Basic $header", credentials)
         response.body()?.oauth?.let {
-            cacheManager.set(CacheKey.ACCESS_TOKEN, it.accessToken)
+            if (it.access_token.isNotEmpty()) {
+                cacheManager.set(HeaderKey.BEARER_AUTHENTICATION, it.access_token)
+                return true
+            }
         }
-        return response
+        return false
     }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseFragment<VB : ViewBinding> : Fragment() {
@@ -16,7 +17,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     abstract fun initListeners()
 
-    abstract fun initResrouces()
+    abstract fun initResources()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,4 +37,11 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun navigate(action: Int) {
+        if (findNavController().currentDestination?.id != action) {
+            findNavController().navigate(action)
+        }
+    }
+
 }
