@@ -1,4 +1,4 @@
-package com.company.androidtask.presentation.common
+package com.company.androidtask.presentation.common.extensions
 
 import android.content.Context
 import android.widget.Toast

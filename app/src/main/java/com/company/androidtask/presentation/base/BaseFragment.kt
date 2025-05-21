@@ -5,15 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.company.androidtask.MainActivity
 import com.company.androidtask.R
+import com.company.androidtask.presentation.common.extensions.collectFlowOnStart
 import com.company.androidtask.presentation.common.helper.DialogHelper
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
@@ -54,32 +51,30 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
     }
 
     private fun observeUiState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    val mainActivity = activity as? MainActivity
-
-                    when (uiState) {
-                        UIState.Loading -> {
-                            mainActivity?.setLoading(true)
-                        }
-
-                        UIState.Idle -> {
-                            mainActivity?.setLoading(false)
-                        }
-
-                        is UIState.Error -> {
-                            mainActivity?.setLoading(false)
-                            mainActivity?.runOnUiThread {
-                                dialogHelper.showDialog(
-                                    title = getString(R.string.dialog_error_title_generic),
-                                    message = "Error: ${uiState.message.takeIf { it.isNotEmpty() } ?: "An unknown error occurred"}",
-                                    negativeButtonText = getString(R.string.dialog_button_cancel),
-                                    onNegativeButtonClick = { navigateBack() }
-                                )
-                            }
-                        }
-                    }
+        viewModel.uiState.collectFlowOnStart { uiState ->
+            val mainActivity = activity as? MainActivity
+            mainActivity?.setLoadingVisibility(uiState)
+            if (uiState is UIState.Error) {
+                mainActivity?.runOnUiThread {
+                    dialogHelper.showDialog(
+                        title = getString(R.string.dialog_error_title_generic),
+                        message = "Error: ${uiState.message.takeIf { it.isNotEmpty() } ?: "An unknown error occurred"}",
+                        positiveButtonText = getString(R.string.dialog_button_try_again),
+                        onPositiveButtonClick = {
+                            findNavController().navigate(
+                                R.id.SplashFragment,
+                                null,
+                                androidx.navigation.navOptions {
+                                    popUpTo(findNavController().graph.startDestinationId) {
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
+                            )
+                        },
+                        negativeButtonText = getString(R.string.exit),
+                        onNegativeButtonClick = { mainActivity.finish() }
+                    )
                 }
             }
         }

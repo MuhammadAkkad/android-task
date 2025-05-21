@@ -21,7 +21,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
 
     protected fun <T> execute(
         request: suspend () -> T,
-        updateState: suspend (T) -> Unit
+        onResult: suspend (T) -> Unit
     ) {
         viewModelScope.launch {
             _uiState.emit(UIState.Loading)
@@ -31,7 +31,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
 
                 if (result is Response<*>) {
                     if (result.isSuccessful) {
-                        updateState.invoke(result)
+                        onResult.invoke(result)
                     } else {
                         val errorBodyString = try {
                             result.errorBody()?.string()
@@ -40,10 +40,10 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
                         }
 
                         val errorMessage = errorBodyString ?: result.message() ?: "Unknown error"
-                        _uiState.emit(UIState.Error("${result.code()} - $errorMessage"))
+                        _uiState.emit(UIState.Error(errorMessage))
                     }
                 } else {
-                    updateState.invoke(result)
+                    onResult.invoke(result)
                 }
 
             } catch (e: Exception) {

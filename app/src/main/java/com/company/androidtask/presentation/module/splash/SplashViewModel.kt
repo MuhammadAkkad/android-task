@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val repository: LoginRepository,
+    private val loginRepository: LoginRepository,
     cacheManager: CacheManager
 ) : BaseViewModel() {
 
@@ -26,7 +26,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun login() {
-        execute({ repository.login(LoginRequestModel.CREDENTIALS) }) {
+        execute({ loginRepository.login(LoginRequestModel.CREDENTIALS) }) {
             _loginState.emit(it.body())
         }
     }

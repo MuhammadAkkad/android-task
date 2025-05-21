@@ -1,4 +1,4 @@
-package com.company.androidtask.presentation.common
+package com.company.androidtask.presentation.common.extensions
 
 fun String?.orHyphen(): String {
     return if (this.isNullOrEmpty()) {

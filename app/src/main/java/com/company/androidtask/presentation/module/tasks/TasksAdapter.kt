@@ -12,15 +12,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.company.androidtask.data.remote.model.TasksModel
 import com.company.androidtask.databinding.ItemTaskBinding
-import com.company.androidtask.presentation.common.orHyphen
+import com.company.androidtask.presentation.common.extensions.orHyphen
 
 class TaskAdapter : ListAdapter<TasksModel, TaskAdapter.TaskViewHolder>(TaskDiffCallback()),
     Filterable {
 
-    private var fullList: List<TasksModel> = emptyList()
+    private var list: List<TasksModel> = emptyList()
 
-    fun setFullList(list: List<TasksModel>?) {
-        fullList = list ?: emptyList()
+    fun setList(list: List<TasksModel>?) {
+        this.list = list ?: emptyList()
         submitList(list)
     }
 
@@ -70,10 +70,10 @@ class TaskAdapter : ListAdapter<TasksModel, TaskAdapter.TaskViewHolder>(TaskDiff
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val filteredList = if (constraint.isNullOrEmpty()) {
-                    fullList
+                    list
                 } else {
                     val query = constraint.toString().lowercase()
-                    fullList.filter { task ->
+                    list.filter { task ->
                         task.task.orEmpty().lowercase().contains(query) ||
                                 task.title.orEmpty().lowercase().contains(query) ||
                                 task.description.orEmpty().lowercase().contains(query) ||

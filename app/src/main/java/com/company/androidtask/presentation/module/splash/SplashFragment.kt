@@ -6,7 +6,7 @@ import androidx.fragment.app.viewModels
 import com.company.androidtask.R
 import com.company.androidtask.databinding.FragmentSplashBinding
 import com.company.androidtask.presentation.base.BaseFragment
-import com.company.androidtask.presentation.common.collectFlow
+import com.company.androidtask.presentation.common.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +29,5 @@ class SplashFragment : BaseFragment<FragmentSplashBinding, SplashViewModel>() {
         }
     }
 
-    override fun initResources() {
-    }
+    override fun initResources() {}
 }

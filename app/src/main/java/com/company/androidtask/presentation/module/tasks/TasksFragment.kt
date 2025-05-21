@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.company.androidtask.R
 import com.company.androidtask.databinding.FragmentTasksBinding
 import com.company.androidtask.presentation.base.BaseFragment
-import com.company.androidtask.presentation.common.collectFlow
+import com.company.androidtask.presentation.common.extensions.collectFlow
 import com.company.androidtask.presentation.module.qr.QrScannerFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,7 +43,7 @@ class TasksFragment : BaseFragment<FragmentTasksBinding, TasksViewModel>() {
         }
 
         viewModel.tasks.collectFlow { tasks ->
-            taskAdapter?.setFullList(tasks)
+            taskAdapter?.setList(tasks)
         }
 
         setFragmentResultListener(QrScannerFragment.QR_SCAN_REQUEST_KEY) { requestKey, bundle ->

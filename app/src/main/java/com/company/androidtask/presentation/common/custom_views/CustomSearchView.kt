@@ -1,4 +1,4 @@
-package com.company.androidtask.presentation.common.views
+package com.company.androidtask.presentation.common.custom_views
 
 import android.content.Context
 import android.text.Editable
@@ -60,9 +60,5 @@ class CustomSearchView @JvmOverloads constructor(
     fun setQuery(query: String) {
         binding.editTextSearch.setText(query)
         binding.editTextSearch.setSelection(query.length)
-    }
-
-    fun getQuery(): String {
-        return binding.editTextSearch.text.toString()
     }
 }

@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
-    private val repository: TasksRepository
+    private val tasksRepository: TasksRepository
 ) : BaseViewModel() {
 
     private val _tasks = MutableStateFlow<List<TasksModel>?>(null)
@@ -21,7 +21,7 @@ class TasksViewModel @Inject constructor(
     }
 
     fun fetchTasks() {
-        execute({ repository.getTasks() }) {
+        execute({ tasksRepository.getTasks() }) {
             _tasks.emit(it?.body())
         }
     }

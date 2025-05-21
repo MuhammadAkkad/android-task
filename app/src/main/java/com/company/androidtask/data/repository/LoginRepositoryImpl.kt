@@ -27,45 +27,42 @@ class LoginRepositoryImpl @Inject constructor(
 
             if (response.isSuccessful) {
                 val accessToken = response.body()?.oauth?.access_token
-                if (!accessToken.isNullOrEmpty()) {
+                return if (!accessToken.isNullOrEmpty()) {
                     cacheManager.set(CacheKey.BEARER_AUTHENTICATION, accessToken)
-                    return Response.success(response.body()?.oauth?.access_token)
+                    Response.success(accessToken)
                 } else {
-
-                    val cachedAccessToken = cacheManager.get<String>(CacheKey.BEARER_AUTHENTICATION)
-                    return if (!cachedAccessToken.isNullOrEmpty()) {
-                        Response.success(cachedAccessToken)
-                    } else {
-                        Response.error(
-                            response.code(),
-                            "no valid access token provided.".toResponseBody(null)
-                        )
-                    }
-                }
-            } else {
-                val cachedAccessToken = cacheManager.get<String>(CacheKey.BEARER_AUTHENTICATION)
-                return if (!cachedAccessToken.isNullOrEmpty()) {
-                    Response.success(cachedAccessToken)
-                } else {
-                    val errorMessage = response.errorBody()?.string() ?: response.message()
-                    Response.error(
+                    handleFailedLoginAttemptWithCache(
                         response.code(),
-                        errorMessage?.toResponseBody(null) ?: "Unknown login error".toResponseBody(
-                            null
-                        )
+                        "no valid access token provided."
                     )
                 }
-            }
-        } catch (e: IOException) {
-            val cachedAccessToken = cacheManager.get<String>(CacheKey.BEARER_AUTHENTICATION)
-            return if (!cachedAccessToken.isNullOrEmpty()) {
-                Response.success(cachedAccessToken)
             } else {
-                Response.error(
-                    503,
-                    "No internet connection and no cached login.".toResponseBody(null)
+                val errorMessage = response.errorBody()?.string() ?: response.message()
+                return handleFailedLoginAttemptWithCache(
+                    response.code(),
+                    errorMessage ?: "Unknown login error"
                 )
             }
+        } catch (e: IOException) {
+            return handleFailedLoginAttemptWithCache(
+                503,
+                "No internet connection and no cached login."
+            )
+        }
+    }
+
+    private fun handleFailedLoginAttemptWithCache(
+        errorCode: Int,
+        errorMessage: String
+    ): Response<String?> {
+        val cachedAccessToken = cacheManager.get<String>(CacheKey.BEARER_AUTHENTICATION)
+        return if (!cachedAccessToken.isNullOrEmpty()) {
+            Response.success(cachedAccessToken)
+        } else {
+            Response.error(
+                errorCode,
+                errorMessage.toResponseBody(null)
+            )
         }
     }
 }

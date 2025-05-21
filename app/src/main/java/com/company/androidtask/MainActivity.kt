@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import com.company.androidtask.databinding.ActivityMainBinding
+import com.company.androidtask.presentation.base.UIState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    fun setLoading(show: Boolean) {
-        binding.loadingView.isVisible = show
+    fun setLoadingVisibility(uiState: UIState) {
+        binding.loadingView.isVisible = uiState == UIState.Loading
     }
 }

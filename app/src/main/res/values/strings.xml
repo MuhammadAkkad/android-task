@@ -3,12 +3,7 @@
     <string name="splash">Splash</string>
     <string name="search_hint">Search for Title, Description or anything</string>
     <string name="loading_data">Loading data...</string>
-    <string name="dialog_error_title_default">Something went wrong</string>
-    <string name="dialog_error_description_default">Unable to make connection, please try again later.</string>
-    <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_error_title_generic">We encountered an error</string>
-    <string name="dialog_button_retry">Retry</string>
-
     <string name="camera_permission_needed">Camera Permission Needed</string>
     <string name="camera_permission_message">We need camera access to capture photos. Please enable it in settings.</string>
     <string name="go_to_settings">Go to Settings</string>
@@ -17,4 +12,6 @@
     <string name="qr_screen_title">Scan QR Code</string>
     <string name="qr_error">QR scanner error</string>
     <string name="qr_error_description">An error occurred while scanning the QR code</string>
+    <string name="dialog_button_try_again">Try Again</string>
+    <string name="exit">Exit</string>
 </resources>

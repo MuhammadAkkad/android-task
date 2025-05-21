@@ -30,20 +30,29 @@ class TasksRepositoryImpl @Inject constructor(
                 }
                 return response
             } else {
-                val localTasks = dao.getTasks()
-                return if (localTasks.isNotEmpty()) {
-                    Response.success(localTasks)
-                } else {
-                    Response.error(response.code(), response.message().toResponseBody(null))
-                }
+                val errorMessage = response.errorBody()?.string() ?: response.message()
+                return handleFailedNetworkFetchWithCache(
+                    response.code(),
+                    errorMessage ?: "Unknown API error during task fetch."
+                )
             }
         } catch (e: IOException) {
-            val localTasks = dao.getTasks()
-            return if (localTasks.isNotEmpty()) {
-                Response.success(localTasks)
-            } else {
-                Response.error(503, "No internet connection and no cached data.".toResponseBody(null))
-            }
+            return handleFailedNetworkFetchWithCache(
+                503,
+                "No internet connection and no cached data."
+            )
+        }
+    }
+
+    private suspend fun handleFailedNetworkFetchWithCache(
+        errorCode: Int,
+        errorMessage: String
+    ): Response<List<TasksModel>> {
+        val localTasks = dao.getTasks()
+        return if (localTasks.isNotEmpty()) {
+            Response.success(localTasks)
+        } else {
+            Response.error(errorCode, errorMessage.toResponseBody(null))
         }
     }
 }

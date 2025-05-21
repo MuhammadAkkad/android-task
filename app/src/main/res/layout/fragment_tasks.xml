@@ -21,7 +21,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.company.androidtask.presentation.common.views.CustomSearchView
+    <com.company.androidtask.presentation.common.custom_views.CustomSearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

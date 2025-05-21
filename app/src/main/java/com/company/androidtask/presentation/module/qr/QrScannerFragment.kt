@@ -60,7 +60,6 @@ class QrScannerFragment : BaseFragment<FragmentQrBinding, BaseViewModel>() {
         }
     }
 
-    @OptIn(ExperimentalGetImage::class)
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 

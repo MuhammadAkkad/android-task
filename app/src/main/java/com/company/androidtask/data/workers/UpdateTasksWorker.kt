@@ -20,15 +20,15 @@ class UpdateTasksWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            val loginResponse = loginRepository.login(LoginRequestModel.CREDENTIALS)
-            if (!loginResponse.isSuccessful) {
-                return Result.retry()
-            }
 
             val tasksResponse = tasksRepository.getTasks()
             if (tasksResponse?.isSuccessful == true) {
                 Result.success()
             } else {
+                val loginResponse = loginRepository.login(LoginRequestModel.CREDENTIALS)
+                if (!loginResponse.isSuccessful) {
+                    return Result.retry()
+                }
                 Result.retry()
             }
         } catch (e: Exception) {

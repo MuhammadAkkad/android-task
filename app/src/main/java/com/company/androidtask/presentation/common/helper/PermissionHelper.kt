@@ -8,7 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.company.androidtask.R
-import com.company.androidtask.presentation.common.showMessage
+import com.company.androidtask.presentation.common.extensions.showMessage
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
