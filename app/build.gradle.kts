@@ -34,6 +34,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs = listOf("-Xcontext-receivers")
     }
 
     buildFeatures {
@@ -67,4 +68,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.okhttp.logging)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.work.runtime.ktx)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.work.compiler)
 }

@@ -22,12 +22,11 @@ class SplashViewModel @Inject constructor(
 
     init {
         cacheManager.set(CacheKey.BASIC_AUTHENTICATION, API_KEY)
-
         login()
     }
 
     private fun login() {
-        execute({ repository.login(LoginRequestModel("365", "1")) }) {
+        execute({ repository.login(LoginRequestModel.CREDENTIALS) }) {
             _loginState.emit(it.body())
         }
     }

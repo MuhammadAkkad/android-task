@@ -3,13 +3,11 @@ package com.company.androidtask.presentation.module.splash
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.company.androidtask.R
 import com.company.androidtask.databinding.FragmentSplashBinding
 import com.company.androidtask.presentation.base.BaseFragment
+import com.company.androidtask.presentation.common.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SplashFragment : BaseFragment<FragmentSplashBinding, SplashViewModel>() {
@@ -24,11 +22,9 @@ class SplashFragment : BaseFragment<FragmentSplashBinding, SplashViewModel>() {
     }
 
     override fun initListeners() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loginState.collectLatest {
-                it?.let {
-                    navigate(R.id.action_SplashFragment_to_TasksFragment)
-                }
+        viewModel.loginState.collectFlow {
+            it?.let {
+                navigate(R.id.action_SplashFragment_to_TasksFragment)
             }
         }
     }
