@@ -2,6 +2,7 @@ package com.company.androidtask
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.Constraints
@@ -23,6 +24,7 @@ class App : Application(), Configuration.Provider {
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
+            .setMinimumLoggingLevel(Log.DEBUG)
             .build()
 
     override fun onCreate() {
@@ -37,7 +39,6 @@ class App : Application(), Configuration.Provider {
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
-
                     .build()
             )
             .build()

@@ -1,7 +1,6 @@
 package com.company.androidtask.data.workers
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -23,23 +22,16 @@ class UpdateTasksWorker @AssistedInject constructor(
         return try {
             val loginResponse = loginRepository.login(LoginRequestModel.CREDENTIALS)
             if (!loginResponse.isSuccessful) {
-                Log.e("UpdateTasksWorker", "Login failed with code: ${loginResponse.code()}")
                 return Result.retry()
             }
 
             val tasksResponse = tasksRepository.getTasks()
             if (tasksResponse?.isSuccessful == true) {
-                Log.i("UpdateTasksWorker", "Tasks successfully updated")
                 Result.success()
             } else {
-                Log.e(
-                    "UpdateTasksWorker",
-                    "Failed to fetch tasks with code: ${tasksResponse?.code()}"
-                )
                 Result.retry()
             }
         } catch (e: Exception) {
-            Log.e("UpdateTasksWorker", "Exception in worker: ${e.message}", e)
             Result.retry()
         }
     }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,12 +28,18 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
 
             try {
                 val result = withContext(Dispatchers.IO) { request() }
+
                 if (result is Response<*>) {
                     if (result.isSuccessful) {
                         updateState.invoke(result)
                     } else {
-                        val errorMessage =
-                            result.message() ?: result.errorBody() ?: "Unknown error"
+                        val errorBodyString = try {
+                            result.errorBody()?.string()
+                        } catch (e: IOException) {
+                            null
+                        }
+
+                        val errorMessage = errorBodyString ?: result.message() ?: "Unknown error"
                         _uiState.emit(UIState.Error("${result.code()} - $errorMessage"))
                     }
                 } else {
@@ -40,12 +47,11 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
                 }
 
             } catch (e: Exception) {
-                _uiState.emit(UIState.Error(e.localizedMessage ?: "An error occurred"))
+                _uiState.emit(UIState.Error(e.localizedMessage ?: "An unexpected error occurred"))
 
             } finally {
                 _uiState.emit(UIState.Idle)
             }
         }
     }
-
 }
