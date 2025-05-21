@@ -18,6 +18,16 @@
         android:id="@+id/TasksFragment"
         android:name="com.company.androidtask.presentation.module.tasks.TasksFragment"
         android:label="Tasks Fragment"
-        tools:layout="@layout/fragment_tasks"></fragment>
+        tools:layout="@layout/fragment_tasks" >
+        <action
+            android:id="@+id/action_TasksFragment_to_QrFragment"
+            app:destination="@id/QrFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/QrFragment"
+        android:name="com.company.androidtask.presentation.module.qr.QrScannerFragment"
+        android:label="Qr Fragment"
+        tools:layout="@layout/fragment_qr" />
 
 </navigation>

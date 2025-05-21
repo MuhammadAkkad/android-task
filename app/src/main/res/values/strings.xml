@@ -8,4 +8,13 @@
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_error_title_generic">We encountered an error</string>
     <string name="dialog_button_retry">Retry</string>
+
+    <string name="camera_permission_needed">Camera Permission Needed</string>
+    <string name="camera_permission_message">We need camera access to capture photos. Please enable it in settings.</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="go_back">Go Back</string>
+    <string name="qr_screen_title">Scan QR Code</string>
+    <string name="qr_error">QR scanner error</string>
+    <string name="qr_error_description">An error occurred while scanning the QR code</string>
 </resources>

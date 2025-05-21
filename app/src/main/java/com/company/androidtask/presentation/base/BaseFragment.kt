@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.company.androidtask.MainActivity
 import com.company.androidtask.R
+import com.company.androidtask.presentation.common.helper.DialogHelper
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
     protected abstract val viewModel: VM
 
     @Inject
-    lateinit var dialogManager: DialogManager
+    lateinit var dialogHelper: DialogHelper
 
     abstract fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): VB
 
@@ -47,6 +48,11 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
         initListeners()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -65,10 +71,11 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
                         is UIState.Error -> {
                             mainActivity?.setLoading(false)
                             mainActivity?.runOnUiThread {
-                                dialogManager.showErrorDialog(
-                                    titleResId = R.string.dialog_error_title_generic,
-                                    description = "Error: ${uiState.message.takeIf { it.isNotEmpty() } ?: "An unknown error occurred"}",
-                                    buttonTextResId = R.string.dialog_button_cancel,
+                                dialogHelper.showDialog(
+                                    title = getString(R.string.dialog_error_title_generic),
+                                    message = "Error: ${uiState.message.takeIf { it.isNotEmpty() } ?: "An unknown error occurred"}",
+                                    negativeButtonText = getString(R.string.dialog_button_cancel),
+                                    onNegativeButtonClick = { navigateBack() }
                                 )
                             }
                         }
@@ -78,14 +85,17 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     fun navigate(action: Int) {
         if (findNavController().currentDestination?.id != action) {
             findNavController().navigate(action)
         }
+    }
+
+    fun navigateBackWithResult() {
+        findNavController().popBackStack()
+    }
+
+    fun navigateBack() {
+        findNavController().navigateUp()
     }
 }

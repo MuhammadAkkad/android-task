@@ -2,12 +2,14 @@ package com.company.androidtask.presentation.module.tasks
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.company.androidtask.R
 import com.company.androidtask.databinding.FragmentTasksBinding
 import com.company.androidtask.presentation.base.BaseFragment
 import com.company.androidtask.presentation.common.collectFlow
+import com.company.androidtask.presentation.module.qr.QrScannerFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,6 +35,8 @@ class TasksFragment : BaseFragment<FragmentTasksBinding, TasksViewModel>() {
     }
 
     override fun initListeners() {
+        setupCustomSearchView()
+
         binding.swipeToRefresh.setOnRefreshListener {
             viewModel.fetchTasks()
             binding.swipeToRefresh.isRefreshing = false
@@ -42,7 +46,14 @@ class TasksFragment : BaseFragment<FragmentTasksBinding, TasksViewModel>() {
             taskAdapter?.setFullList(tasks)
         }
 
-        setupCustomSearchView()
+        setFragmentResultListener(QrScannerFragment.QR_SCAN_REQUEST_KEY) { requestKey, bundle ->
+            if (requestKey == QrScannerFragment.QR_SCAN_REQUEST_KEY) {
+                val scannedQrText = bundle.getString(QrScannerFragment.QR_SCAN_RESULT_KEY)
+                scannedQrText?.let {
+                    binding.searchView.setQuery(it)
+                }
+            }
+        }
     }
 
     private fun setupCustomSearchView() {
@@ -51,11 +62,7 @@ class TasksFragment : BaseFragment<FragmentTasksBinding, TasksViewModel>() {
         }
 
         binding.searchView.onQrClick {
-            Toast.makeText(
-                requireContext(),
-                "QR Code scanner clicked!",
-                Toast.LENGTH_SHORT
-            ).show()
+            navigate(R.id.action_TasksFragment_to_QrFragment)
         }
     }
 }
