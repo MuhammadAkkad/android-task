@@ -1,6 +1,6 @@
-package com.company.androidtask.data.remote
+package com.company.androidtask.data.manager
 
-object HeaderKey {
+object CacheKey {
     const val BASIC_AUTHENTICATION: String = "login_access_token"
     const val BEARER_AUTHENTICATION: String = "tasks_access_token"
 }

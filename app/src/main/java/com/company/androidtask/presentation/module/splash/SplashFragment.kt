@@ -25,16 +25,9 @@ class SplashFragment : BaseFragment<FragmentSplashBinding, SplashViewModel>() {
 
     override fun initListeners() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isAuthorized.collectLatest {
-                it?.let { isAuthorized ->
-                    if (isAuthorized)
-                        navigate(R.id.action_SplashFragment_to_TasksFragment)
-                    else
-                        dialogManager.showErrorDialog(
-                            titleResId = R.string.dialog_error_title_default,
-                            descriptionResId = R.string.dialog_error_description_default,
-                            buttonTextResId = R.string.dialog_button_cancel,
-                        )
+            viewModel.loginState.collectLatest {
+                it?.let {
+                    navigate(R.id.action_SplashFragment_to_TasksFragment)
                 }
             }
         }
