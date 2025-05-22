@@ -1,5 +1,6 @@
 package com.company.androidtask.data.repository
 
+import com.company.androidtask.data.common.Constants.API_KEY
 import com.company.androidtask.data.manager.CacheKey
 import com.company.androidtask.data.manager.CacheManager
 import com.company.androidtask.data.remote.ApiService
@@ -16,14 +17,8 @@ class LoginRepositoryImpl @Inject constructor(
 ) : LoginRepository {
 
     override suspend fun login(credentials: LoginRequestModel): Response<String?> {
-        val header = cacheManager.get<String>(CacheKey.BASIC_AUTHENTICATION)
-            ?: return Response.error(
-                401,
-                "Basic authentication header missing".toResponseBody(null)
-            )
-
         try {
-            val response = apiService.login("Basic $header", credentials)
+            val response = apiService.login("Basic $API_KEY", credentials)
 
             if (response.isSuccessful) {
                 val accessToken = response.body()?.oauth?.access_token

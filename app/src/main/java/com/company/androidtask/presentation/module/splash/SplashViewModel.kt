@@ -13,15 +13,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val loginRepository: LoginRepository,
-    cacheManager: CacheManager
+    private val loginRepository: LoginRepository
 ) : BaseViewModel() {
 
     private val _loginState = MutableStateFlow<String?>(null)
     val loginState: StateFlow<String?> get() = _loginState
 
     init {
-        cacheManager.set(CacheKey.BASIC_AUTHENTICATION, API_KEY)
         login()
     }
 
