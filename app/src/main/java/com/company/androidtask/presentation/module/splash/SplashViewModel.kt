@@ -1,8 +1,5 @@
 package com.company.androidtask.presentation.module.splash
 
-import com.company.androidtask.data.common.Constants.API_KEY
-import com.company.androidtask.data.manager.CacheKey
-import com.company.androidtask.data.manager.CacheManager
 import com.company.androidtask.data.remote.model.LoginRequestModel
 import com.company.androidtask.domain.LoginRepository
 import com.company.androidtask.presentation.base.BaseViewModel
@@ -16,8 +13,8 @@ class SplashViewModel @Inject constructor(
     private val loginRepository: LoginRepository
 ) : BaseViewModel() {
 
-    private val _loginState = MutableStateFlow<String?>(null)
-    val loginState: StateFlow<String?> get() = _loginState
+    private val _loginState = MutableStateFlow<Unit?>(null)
+    val loginState: StateFlow<Unit?> get() = _loginState
 
     init {
         login()

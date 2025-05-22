@@ -5,6 +5,6 @@ import retrofit2.Response
 
 interface LoginRepository {
 
-    suspend fun login(credentials: LoginRequestModel): Response<String?>
+    suspend fun login(credentials: LoginRequestModel): Response<Unit>
 
 }

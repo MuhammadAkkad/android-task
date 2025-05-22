@@ -16,7 +16,7 @@ class LoginRepositoryImpl @Inject constructor(
     private val cacheManager: CacheManager
 ) : LoginRepository {
 
-    override suspend fun login(credentials: LoginRequestModel): Response<String?> {
+    override suspend fun login(credentials: LoginRequestModel): Response<Unit> {
         try {
             val response = apiService.login("Basic $API_KEY", credentials)
 
@@ -24,7 +24,7 @@ class LoginRepositoryImpl @Inject constructor(
                 val accessToken = response.body()?.oauth?.access_token
                 return if (!accessToken.isNullOrEmpty()) {
                     cacheManager.set(CacheKey.BEARER_AUTHENTICATION, accessToken)
-                    Response.success(accessToken)
+                    Response.success(Unit)
                 } else {
                     handleFailedLoginAttemptWithCache(
                         response.code(),
@@ -49,10 +49,10 @@ class LoginRepositoryImpl @Inject constructor(
     private fun handleFailedLoginAttemptWithCache(
         errorCode: Int,
         errorMessage: String
-    ): Response<String?> {
+    ): Response<Unit> {
         val cachedAccessToken = cacheManager.get<String>(CacheKey.BEARER_AUTHENTICATION)
         return if (!cachedAccessToken.isNullOrEmpty()) {
-            Response.success(cachedAccessToken)
+            Response.success(Unit)
         } else {
             Response.error(
                 errorCode,
