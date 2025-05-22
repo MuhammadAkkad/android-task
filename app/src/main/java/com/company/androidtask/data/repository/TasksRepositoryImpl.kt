@@ -14,7 +14,7 @@ import javax.inject.Inject
 class TasksRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val cacheManager: CacheManager,
-    private val dao: TasksDao
+    private val tasksDao: TasksDao
 ) : TasksRepository {
 
     override suspend fun getTasks(): Response<List<TasksModel>> {
@@ -26,7 +26,7 @@ class TasksRepositoryImpl @Inject constructor(
 
             if (response.isSuccessful) {
                 response.body()?.let { tasks ->
-                    dao.insertTasks(tasks)
+                    tasksDao.insertTasks(tasks)
                 }
                 return response
             } else {
@@ -48,7 +48,7 @@ class TasksRepositoryImpl @Inject constructor(
         errorCode: Int,
         errorMessage: String
     ): Response<List<TasksModel>> {
-        val localTasks = dao.getTasks()
+        val localTasks = tasksDao.getTasks()
         return if (localTasks.isNotEmpty()) {
             Response.success(localTasks)
         } else {

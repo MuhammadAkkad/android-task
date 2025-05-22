@@ -13,8 +13,8 @@ class TasksViewModel @Inject constructor(
     private val tasksRepository: TasksRepository
 ) : BaseViewModel() {
 
-    private val _tasks = MutableStateFlow<List<TasksModel>?>(null)
-    val tasks: StateFlow<List<TasksModel>?> get() = _tasks
+    private val _tasks = MutableStateFlow<List<TasksModel>>(emptyList())
+    val tasks: StateFlow<List<TasksModel>> get() = _tasks
 
     init {
         fetchTasks()
@@ -22,7 +22,7 @@ class TasksViewModel @Inject constructor(
 
     fun fetchTasks() {
         execute({ tasksRepository.getTasks() }) {
-            _tasks.emit(it?.body())
+            _tasks.emit(it?.body() ?: emptyList())
         }
     }
 }
