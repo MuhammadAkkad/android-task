@@ -26,6 +26,8 @@ class TasksRepositoryImpl @Inject constructor(
 
             if (response.isSuccessful) {
                 response.body()?.let { tasks ->
+                    // as the API don't provide unique ID and auto generating is not safe. we need to empty the table each time to prevent duplicate items.
+                    tasksDao.nukeTasks()
                     tasksDao.insertTasks(tasks)
                 }
                 return response
